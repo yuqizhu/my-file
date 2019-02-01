@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>10.253.208.196:5000</destination>
+        <!-- encoder is required -->
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc /> 		<!-- MDC variables on the Thread will be written as JSON fields -->
+                <context /> 	<!--Outputs entries from logback's context -->
+                <version /> 	<!-- Logstash json format version, the @version field in the output -->
+                <logLevel />
+                <loggerName />
+                <threadName />
+                <pattern>
+                    <pattern>
+                        {
+                        "indexName": "out_blob"
+                        }
+                    </pattern>
+                </pattern>
+                <message />
+                <logstashMarkers />
+                <arguments />
+                <stackTrace />
+            </providers>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.mkyong.web" level="debug" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="LOGSTASH" />
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
